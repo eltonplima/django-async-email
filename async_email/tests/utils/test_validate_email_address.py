@@ -43,7 +43,10 @@ def test_with_valid_email(email):
 
 @pytest.mark.parametrize(
     "validate_existence_of_mx_record, calls",
-    [(True, [call("example.com")]), (False, []),],
+    [
+        (True, [call("example.com")]),
+        (False, []),
+    ],
 )
 def test_if__resolve_dns_mx_record__is_called(
     mocker, validate_existence_of_mx_record, calls
@@ -64,7 +67,9 @@ def test_if__resolve_dns_mx_record__is_called(
     mocked_resolve_dns_mx_record.assert_has_calls(calls)
 
 
-def test_default_value_of_param_validate_existence_of_mx_record(mocker,):
+def test_default_value_of_param_validate_existence_of_mx_record(
+    mocker,
+):
     mocked_resolve_dns_mx_record = mocker.patch(
         "async_email.email.utils.resolve_dns_mx_record"
     )

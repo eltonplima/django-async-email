@@ -4,7 +4,10 @@ from async_email.email.template import email_factory
 
 
 def send_email(
-    to: Tuple[str], email_category: str, from_email: str = None, context: Dict = None,
+    to: Tuple[str],
+    email_category: str,
+    from_email: str = None,
+    context: Dict = None,
 ):
     """
     Helper function to send an email to one or more recipients.

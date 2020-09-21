@@ -18,7 +18,9 @@ def test_with_valid_category(template_based_email_instance, context, settings, m
     )
 
     email = email_factory(
-        email_category="fake_category", from_email="fake@example.com", context=context,
+        email_category="fake_category",
+        from_email="fake@example.com",
+        context=context,
     )
 
     assert email == mocked_email

@@ -30,7 +30,10 @@ def send_email_task(
 
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
     send_email(
-        to=to, email_category=email_category, from_email=from_email, context=context,
+        to=to,
+        email_category=email_category,
+        from_email=from_email,
+        context=context,
     )
 
     email_sent_at = timezone.now()

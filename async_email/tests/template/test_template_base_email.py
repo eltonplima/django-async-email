@@ -60,7 +60,10 @@ class TestSend:
         template_email.send(to=email)
 
         stub.assert_called_once_with(
-            body="fake", from_email="noreply@example.com", subject="fake", to=email,
+            body="fake",
+            from_email="noreply@example.com",
+            subject="fake",
+            to=email,
         )
         mocked_email_instance.attach_alternative.assert_not_called()
 
@@ -84,7 +87,10 @@ class TestSend:
         template_email.send(to=email)
 
         stub.assert_called_once_with(
-            body="fake", from_email="noreply@example.com", subject="fake", to=email,
+            body="fake",
+            from_email="noreply@example.com",
+            subject="fake",
+            to=email,
         )
         mocked_email_instance.attach_alternative.assert_called_once_with(
             "fake", "text/html"
@@ -180,7 +186,11 @@ class TestSend:
         validate_email_address_mocked.assert_has_calls(calls)
 
     @pytest.mark.parametrize(
-        "check_before_send_email", [True, False,],
+        "check_before_send_email",
+        [
+            True,
+            False,
+        ],
     )
     def test__validate_email_address__with__validate_existence_of_mx_record__can_be_controlled_by_settings(
         self, mocker, context, mocked_template_loader, settings, check_before_send_email
