@@ -8,15 +8,13 @@ def test(mocker, context):
     )
 
     send_email(
-        to="fake@example.com",  # noqa
+        to=("fake@example.com",),
         email_category="reset",
         from_email="noreply@example.com",
         context=context,
     )
 
     email_factory_patched.assert_called_once_with(
-        email_category="reset",
-        from_email="noreply@example.com",
-        context=context,
+        email_category="reset", from_email="noreply@example.com", context=context,
     )
-    email_mock.send.assert_called_once_with(to="fake@example.com")
+    email_mock.send.assert_called_once_with(to=("fake@example.com",))
