@@ -2,7 +2,7 @@ import re
 from email.utils import parseaddr
 
 from async_email.email.exceptions import EmailDomainNotFound, InvalidEmailAddress
-from dns.resolver import NXDOMAIN, Answer, resolve
+from dns.resolver import NXDOMAIN, Answer, query
 
 
 def resolve_dns_mx_record(fqdn: str) -> Answer:
@@ -11,7 +11,7 @@ def resolve_dns_mx_record(fqdn: str) -> Answer:
     never reach the recipient.
     """
     try:
-        return resolve(fqdn, "MX")
+        return query(fqdn, "MX")
     except NXDOMAIN:
         raise EmailDomainNotFound(f"No MX record found for domain: {fqdn}")
 

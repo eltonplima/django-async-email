@@ -1,17 +1,19 @@
 import logging
+from dataclasses import dataclass
 from logging import Logger
 from typing import Dict, Tuple
 
 from async_email.email.utils import validate_email_address
-from attr import attrs
-from django.conf import settings
+
+# from django.conf import settings
+from async_email.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template import loader
 
 logger: Logger = logging.getLogger(__name__)
 
 
-@attrs(auto_attribs=True)
+@dataclass
 class TemplateBasedEmail:
     """
     Abstract the build of an email based on templates.
@@ -49,7 +51,7 @@ class TemplateBasedEmail:
         for email in to:
             validate_email_address(
                 email=email,
-                validate_existence_of_mx_record=settings.CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
+                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
             )
 
         email = self.email_message_class(
@@ -74,13 +76,13 @@ def email_factory(
     :return:
     """
     context = context or {}
-    if email_category not in settings.EMAILS_TEMPLATES:
-        categories = ", ".join(settings.EMAILS_TEMPLATES.keys())
+    if email_category not in settings.ASYNC_EMAIL_EMAILS_TEMPLATES:
+        categories = ", ".join(settings.ASYNC_EMAIL_EMAILS_TEMPLATES.keys())
         raise ValueError(
             f'The email category "{email_category}" was not found.\n'
             f"Please choose one of the following categories: {categories}"
         )
-    email_templates = settings.EMAILS_TEMPLATES.get(email_category)
+    email_templates = settings.ASYNC_EMAIL_EMAILS_TEMPLATES.get(email_category)
     html_email_body_name = email_templates.get("body_html")
     email_body_name = email_templates.get("body_txt")
     email_subject_name = email_templates.get("subject")
