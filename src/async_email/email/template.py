@@ -1,14 +1,16 @@
 import logging
 from dataclasses import dataclass
 from logging import Logger
-from typing import Dict, Tuple
+from typing import Dict
+from typing import Tuple
 
-from async_email.email.utils import validate_email_address
+from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
 
 # from django.conf import settings
 from async_email.conf import settings
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.template import loader
+from async_email.email.utils import validate_email_address
 
 logger: Logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class TemplateBasedEmail:
     html_email_template_name: str = None
     email_message_class: EmailMessage = EmailMultiAlternatives
 
-    def __attrs_post_init__(self):
+    def __post_init__(self):
         validate_email_address(self.from_email)
 
     @property
