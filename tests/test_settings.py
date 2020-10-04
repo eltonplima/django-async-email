@@ -1,9 +1,4 @@
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
-    }
-}
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:",}}
 
 INSTALLED_APPS = (
     "async_email",
@@ -16,7 +11,7 @@ MIDDLEWARE_CLASSES = ()
 
 TASKS = {}
 
-EMAILS_TEMPLATES = {
+ASYNC_EMAIL_EMAILS_TEMPLATES = {
     "fake_category": {
         "subject": "registration/password_set_subject.txt",
         "body_html": "registration/password_set_email.html",
@@ -24,4 +19,4 @@ EMAILS_TEMPLATES = {
     }
 }
 
-CHECK_MX_RECORD_BEFORE_SEND_EMAIL = False
+ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL = False

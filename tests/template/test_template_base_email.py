@@ -1,6 +1,7 @@
 from unittest.mock import call
 
 import pytest
+
 from async_email.email.template import TemplateBasedEmail
 
 
@@ -60,10 +61,7 @@ class TestSend:
         template_email.send(to=email)
 
         stub.assert_called_once_with(
-            body="fake",
-            from_email="noreply@example.com",
-            subject="fake",
-            to=email,
+            body="fake", from_email="noreply@example.com", subject="fake", to=email,
         )
         mocked_email_instance.attach_alternative.assert_not_called()
 
@@ -87,10 +85,7 @@ class TestSend:
         template_email.send(to=email)
 
         stub.assert_called_once_with(
-            body="fake",
-            from_email="noreply@example.com",
-            subject="fake",
-            to=email,
+            body="fake", from_email="noreply@example.com", subject="fake", to=email,
         )
         mocked_email_instance.attach_alternative.assert_called_once_with(
             "fake", "text/html"
@@ -125,7 +120,7 @@ class TestSend:
 
         validate_email_address_mocked.assert_called_once_with(
             email=email[0],
-            validate_existence_of_mx_record=settings.CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
+            validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
         )
 
     def test_param__to__with_invalid_type(
@@ -176,21 +171,17 @@ class TestSend:
         calls = [
             call(
                 email="contact@example.com",
-                validate_existence_of_mx_record=settings.CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
+                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
             ),
             call(
                 email="noreply@example.com",
-                validate_existence_of_mx_record=settings.CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
+                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
             ),
         ]
         validate_email_address_mocked.assert_has_calls(calls)
 
     @pytest.mark.parametrize(
-        "check_before_send_email",
-        [
-            True,
-            False,
-        ],
+        "check_before_send_email", [True, False],
     )
     def test__validate_email_address__with__validate_existence_of_mx_record__can_be_controlled_by_settings(
         self, mocker, context, mocked_template_loader, settings, check_before_send_email
@@ -198,14 +189,14 @@ class TestSend:
         """
         The flag validate_existence_of_mx_record of the function
         validate_email_address is controlled by the flag
-        CHECK_MX_RECORD_BEFORE_SEND_EMAIL that lives on the django
+        ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL that lives on the django
         settings.
         """
-        settings.CHECK_MX_RECORD_BEFORE_SEND_EMAIL = check_before_send_email
+        print(f"check_before_send_email: {check_before_send_email}".center(80, "="))
+        settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL = check_before_send_email
         validate_email_address_mocked = mocker.patch(
             "async_email.email.template.validate_email_address"
         )
-        stub = mocker.Mock()
 
         email = ("contact@example.com",)
 
@@ -215,7 +206,7 @@ class TestSend:
             email_template_name="registration/password_set_email.txt",
             subject_template_name="registration/password_set_subject.txt",
             from_email="noreply@example.com",
-            email_message_class=stub,
+            email_message_class=mocker.Mock(),
         )
         # Reset mock because this function is called on the class initialization too.
         validate_email_address_mocked.reset_mock()
