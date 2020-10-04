@@ -19,7 +19,8 @@ def read(filename):
 requirements = (
     [
         "django>=1.11",
-        "celery>=4.0",
+        "celery>=4.2.2,<5.0",
+        "kombu<5.0",
         "django-appconf",
         "dnspython<2.0.0,>=1.15.0",
         "eventlet",
