@@ -1,5 +1,7 @@
 # django-async-email
 
+[![Actions Status](https://github.com/eltonplima/django-async-email/workflows/tox/badge.svg)](https://github.com/eltonplima/django-async-email/actions)
+
 ```python
 EMAILS_TEMPLATES = {
     "password_reset": {
