@@ -2,7 +2,10 @@ __all__ = [
     "send_email",
 ]
 
-from typing import Dict, Tuple
+from typing import Dict
+from typing import Tuple
+
+from django.conf import settings
 
 from async_email.email.template import email_factory
 
@@ -20,6 +23,12 @@ def send_email(
       declared on customer_settings:DEFAULT_FROM_EMAIL
     :param context: All the necessary context to build the email content.
     """
+    if isinstance(to, str):
+        to = (to,)
+    else:
+        to = tuple(to)
+
+    from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
     email = email_factory(
         email_category=email_category, from_email=from_email, context=context

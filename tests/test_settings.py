@@ -9,7 +9,7 @@ SECRET_KEY = "fake secret key"
 
 MIDDLEWARE_CLASSES = ()
 
-TASKS = {}
+ASYNC_EMAIL_TASKS = {}
 
 ASYNC_EMAIL_EMAILS_TEMPLATES = {
     "fake_category": {

@@ -26,7 +26,7 @@ class TestAttributes:
 
     def test_custom_retry_kwargs(self, fake_task, settings, mocker):
         retry_kwargs = {"max_retries": 66}
-        settings.TASKS[fake_task.name] = retry_kwargs
+        settings.ASYNC_EMAIL_TASKS[fake_task.name] = retry_kwargs
         assert not hasattr(fake_task, "retry_kwargs")
         Task.retry = mocker.Mock()
 

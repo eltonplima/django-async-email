@@ -28,7 +28,9 @@ class BaseTask(Task, ABC):
         """
         Override the default implementation to allow us to customize the max_retries in runtime.
         """
-        max_retries = settings.TASKS.get(self.name, {}).get("max_retries", max_retries)
+        max_retries = settings.ASYNC_EMAIL_TASKS.get(self.name, {}).get(
+            "max_retries", max_retries
+        )
 
         return super().retry(
             args=args,
