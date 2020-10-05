@@ -32,3 +32,13 @@ def test_default_from_email(context, mocker, settings):
         email_category="fake_category",
         from_email="fake_from@example.com",
     )
+
+
+def test_if_email_string_on__to__parameter_is_converted_to_tuple(context, mocker):
+    fake_email_class = mocker.Mock()
+    mocker.patch("async_email.email.email_factory", return_value=fake_email_class)
+
+    send_email(
+        to="noreply@example.com", email_category="fake_category", context=context
+    )
+    fake_email_class.send.assert_called_once_with(to=("noreply@example.com",))
