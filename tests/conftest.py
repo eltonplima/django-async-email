@@ -1,7 +1,8 @@
 import pytest
+from django.template import loader
+
 from async_email.email.template import TemplateBasedEmail
 from async_email.task import BaseTask
-from django.template import loader
 
 
 @pytest.fixture(scope="function")
@@ -36,3 +37,8 @@ def template_based_email_instance(context):
 def mocked_template_loader(mocker):
     mocker.patch.object(loader, "render_to_string", return_value="fake")
     return loader
+
+
+@pytest.fixture(scope="session")
+def celery_config():
+    return {"broker_url": "amqp://", "result_backend": "amqp://"}

@@ -1,4 +1,5 @@
 import pytest
+
 from async_email.email.template import email_factory
 
 
@@ -18,7 +19,7 @@ def test_with_valid_category(template_based_email_instance, context, settings, m
     )
 
     email = email_factory(
-        email_category="fake_category",
+        email_category="fake_category_a",
         from_email="fake@example.com",
         context=context,
     )

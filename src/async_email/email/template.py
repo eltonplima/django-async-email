@@ -8,7 +8,6 @@ from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 
-# from django.conf import settings
 from async_email.conf import settings
 from async_email.email.utils import validate_email_address
 
@@ -25,7 +24,7 @@ class TemplateBasedEmail:
     email_template_name: str
     subject_template_name: str
     from_email: str
-    html_email_template_name: str = None
+    html_email_template_name: str = ""
     email_message_class: EmailMessage = EmailMultiAlternatives
 
     def __post_init__(self):
@@ -78,13 +77,13 @@ def email_factory(
     :return:
     """
     context = context or {}
-    if email_category not in settings.ASYNC_EMAIL_EMAILS_TEMPLATES:
-        categories = ", ".join(settings.ASYNC_EMAIL_EMAILS_TEMPLATES.keys())
+    if email_category not in settings.ASYNC_EMAIL_TEMPLATES:
+        categories = ", ".join(settings.ASYNC_EMAIL_TEMPLATES.keys())
         raise ValueError(
             f'The email category "{email_category}" was not found.\n'
             f"Please choose one of the following categories: {categories}"
         )
-    email_templates = settings.ASYNC_EMAIL_EMAILS_TEMPLATES.get(email_category)
+    email_templates = settings.ASYNC_EMAIL_TEMPLATES.get(email_category)
     html_email_body_name = email_templates.get("body_html")
     email_body_name = email_templates.get("body_txt")
     email_subject_name = email_templates.get("subject")

@@ -1,10 +1,10 @@
-from django.conf import settings  # noqa
 from appconf import AppConf  # noqa
+from django.conf import settings  # noqa
 
 
 class AsyncEmailAppConf(AppConf):
     CHECK_MX_RECORD_BEFORE_SEND_EMAIL = False
-    EMAILS_TEMPLATES = {}
+    TEMPLATES = {}
     TASKS = {}
 
     class Meta:

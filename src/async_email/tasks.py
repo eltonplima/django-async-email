@@ -2,10 +2,13 @@ import socket
 from logging import Logger
 from smtplib import SMTPException
 from typing import Dict
+from typing import List
 from typing import Tuple
+from typing import Union
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.conf import settings
 from django.utils import timezone
 
 from async_email.email import send_email
@@ -28,12 +31,29 @@ def send_email_task(
     return {"email_sent_at": email_sent_at}
 
 
-def route_task(name, args, kwargs, options, task=None, **kw):
-    if name == "myapp.tasks.compress_video":
-        return {
-            "exchange": "video",
-            "exchange_type": "topic",
-            "routing_key": "video.compress",
-        }
-    else:
-        return {"queue": "celery"}
+def create_tasks_for_email_categories(categories: Union[Tuple, List]):
+    """
+    Create a new task for each email category on categories
+
+    The task has the same name of the category. To call the task you can do:
+
+    kwargs = {
+        "email_category": "fake_category",
+        "context": {},
+        "to": "me@eltonplima.dev",
+        "from_email": "contact@eltonplima.dev",
+    }
+    result = celery_app.send_task("fake_category", kwargs=kwargs,)
+    """
+    for category in categories:
+        logger.info(f"registering task send_email for the queue: {category}")
+        shared_task(
+            send_email_task,
+            queue=category,
+            name=category,
+            autoretry_for=(SMTPException, ConnectionRefusedError, socket.timeout),
+            base=BaseTask,
+        )
+
+
+create_tasks_for_email_categories(settings.ASYNC_EMAIL_TEMPLATES.keys())
