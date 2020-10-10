@@ -47,10 +47,12 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
     """
     for category in categories:
         logger.info(f"registering task send_email for the queue: {category}")
+        task_name = f"{__name__}.{category}"
+        task_queue_name = task_name
         shared_task(
             send_email_task,
-            queue=category,
-            name=category,
+            queue=task_queue_name,
+            name=task_name,
             autoretry_for=(SMTPException, ConnectionRefusedError, socket.timeout),
             base=BaseTask,
         )

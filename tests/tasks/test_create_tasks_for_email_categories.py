@@ -16,11 +16,13 @@ def test(mocker, settings):
     calls = []
 
     for category in categories:
+        task_name = f"async_email.tasks.{category}"
+        task_queue_name = task_name
         calls.append(
             call(
                 send_email_task,
-                queue=category,
-                name=category,
+                queue=task_queue_name,
+                name=task_name,
                 autoretry_for=(SMTPException, ConnectionRefusedError, socket.timeout),
                 base=BaseTask,
             )

@@ -1,5 +1,4 @@
 from datetime import datetime
-from time import sleep
 
 import pytest
 from freezegun import freeze_time
@@ -68,26 +67,16 @@ def test_convert__to__into_tuple(context, mocker, settings, email, expected):
     )
 
 
-def test_dynamic_task_creation(celery_worker, celery_app, mocker):
+@pytest.mark.integration_test
+def test_dynamic_task_creation(celery_worker, celery_app, settings):
     """
     Tasks are created dynamically based on the settings.ASYNC_EMAIL_TEMPLATES
     """
-    wait_success_limit = 100
-    send_email_mocked = mocker.patch("async_email.tasks.send_email")
-    kwargs = {
-        "email_category": "fake_category_a",
-        "context": {},
-        "to": "me@eltonplima.dev",
-        "from_email": "contact@eltonplima.dev",
-    }
-    result = celery_app.send_task("fake_category_a", kwargs=kwargs,)
+    from celery.task.control import inspect
 
-    while result.status != "SUCCESS" and wait_success_limit > 0:
-        sleep(0.001)
-        if wait_success_limit == 1:
-            pytest.fail(
-                f"[TIMEOUT] Waiting for the task to execute with success.\nLast known status was {result.status}"
-            )
-        wait_success_limit -= 1
-
-    send_email_mocked.assert_called_once_with(**kwargs)
+    inspect = inspect()
+    expected = [
+        f"async_email.tasks.{email_category}"
+        for email_category in settings.ASYNC_EMAIL_TEMPLATES.keys()
+    ]
+    assert expected in inspect.registered_tasks().values()

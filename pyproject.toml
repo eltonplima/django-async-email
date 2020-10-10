@@ -18,3 +18,6 @@ python_files = [
 ]
 addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short --reuse-db -p no:warnings -s -vvv"
 testpaths = "tests"
+markers = [
+    "integration_test: marks tests as integration (deselect with '-m \"not integration\"')",
+]
