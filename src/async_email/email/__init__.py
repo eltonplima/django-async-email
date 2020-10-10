@@ -11,13 +11,13 @@ from async_email.email.template import email_factory
 
 
 def send_email(
-    to: Tuple[str], email_category: str, from_email: str = None, context: Dict = None,
+    to: Tuple[str], template_name: str, from_email: str = None, context: Dict = None,
 ):
     """
     Helper function to send an email to one or more recipients.
 
     :param to: One or more destination email
-    :param email_category: The category of email that we want to send. You
+    :param template_name: The category of email that we want to send. You
       will find this categories on customer.settings:EMAIL_TEMPLATES
     :param from_email: The sender email, if not set will be used what is
       declared on customer_settings:DEFAULT_FROM_EMAIL
@@ -31,6 +31,10 @@ def send_email(
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
     email = email_factory(
-        email_category=email_category, from_email=from_email, context=context
+        template_name=template_name, from_email=from_email, context=context
     )
     email.send(to=to)
+
+
+def send_email_template(template_name: str, context: Dict, from_email: str, to: Tuple):
+    email_factory(template_name=template_name, from_email=from_email, context=context)

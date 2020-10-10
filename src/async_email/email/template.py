@@ -65,25 +65,25 @@ class TemplateBasedEmail:
 
 
 def email_factory(
-    email_category: str, from_email: str = None, context: Dict = None
+    template_name: str, from_email: str = None, context: Dict = None
 ) -> TemplateBasedEmail:
     """
     Factory to create an instance of TemplateBasedEmail
 
-    :param email_category: The category of email that will be send
+    :param template_name: The category of email that will be send
     :param from_email: The sender email, if not set will be used what is
       declared on customer_settings:DEFAULT_FROM_EMAIL
     :param context: All the necessary context to build the email content.
     :return:
     """
     context = context or {}
-    if email_category not in settings.ASYNC_EMAIL_TEMPLATES:
+    if template_name not in settings.ASYNC_EMAIL_TEMPLATES:
         categories = ", ".join(settings.ASYNC_EMAIL_TEMPLATES.keys())
         raise ValueError(
-            f'The email category "{email_category}" was not found.\n'
+            f'The email category "{template_name}" was not found.\n'
             f"Please choose one of the following categories: {categories}"
         )
-    email_templates = settings.ASYNC_EMAIL_TEMPLATES.get(email_category)
+    email_templates = settings.ASYNC_EMAIL_TEMPLATES.get(template_name)
     html_email_body_name = email_templates.get("body_html")
     email_body_name = email_templates.get("body_txt")
     email_subject_name = email_templates.get("subject")

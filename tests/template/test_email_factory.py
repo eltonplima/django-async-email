@@ -6,7 +6,7 @@ from async_email.email.template import email_factory
 def test_with_invalid_category(template_based_email_instance, context):
     with pytest.raises(ValueError):
         email_factory(
-            email_category="non_existent_category",
+            template_name="non_existent_category",
             from_email="fake@example.com",
             context=context,
         )
@@ -19,9 +19,7 @@ def test_with_valid_category(template_based_email_instance, context, settings, m
     )
 
     email = email_factory(
-        email_category="fake_category_a",
-        from_email="fake@example.com",
-        context=context,
+        template_name="fake_category_a", from_email="fake@example.com", context=context,
     )
 
     assert email == mocked_email
