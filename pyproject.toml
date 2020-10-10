@@ -16,5 +16,5 @@ python_files = [
     "*_test.py",
     "tests.py",
 ]
-addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short --reuse-db -p no:warnings"
+addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short --reuse-db -p no:warnings -s -vvv"
 testpaths = "tests"
