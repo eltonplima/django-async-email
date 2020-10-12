@@ -1,6 +1,5 @@
 import inspect
 
-
 from async_email.email.template import Email
 
 
@@ -9,4 +8,4 @@ def test_if_email_class__is_an_abstract():
 
 
 def test_if_send_method_is_abstract():
-    assert "send" in Email.__abstractmethods__
+    assert "_send" in Email.__abstractmethods__
