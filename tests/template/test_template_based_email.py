@@ -124,26 +124,6 @@ class TestSend:
             validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
         )
 
-    def test_param__to__with_invalid_type(
-        self, mocker, context, mocked_template_loader
-    ):
-        """
-        The param "to" of the method TemplateBasedEmail.send only accepts
-        tuple?
-        """
-        stub = mocker.Mock()
-        with pytest.raises(ValueError):
-            TemplateBasedEmail(
-                context=context,
-                email_template_name="registration/password_set_email.txt",
-                subject_template_name="registration/password_set_subject.txt",
-                from_email="noreply@example.com",
-                email_message_class=stub,
-            ).send(
-                to="fake@example.com"  # noqa
-            )
-        stub.asser_is_not_called()
-
     def test_if_is_calling__validate_email_address__for_each_email(
         self, mocker, context, mocked_template_loader, settings
     ):
