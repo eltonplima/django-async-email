@@ -19,7 +19,7 @@ logger: Logger = logging.getLogger(__name__)
 class Email(metaclass=ABCMeta):
     @abstractmethod
     def send(self, to: Tuple[str]):
-        raise NotImplementedError
+        raise NotImplementedError  # noqa
 
 
 @dataclass
