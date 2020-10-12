@@ -1,7 +1,11 @@
-import pytest
-
 from async_email.email.template import Email
 from async_email.email.template import TemplateBasedEmail
+
+
+def test_superclass():
+    assert issubclass(
+        TemplateBasedEmail, Email
+    ), "The class TemplateBasedEmail is not a subclass of Email"
 
 
 class TestSubject:
@@ -89,97 +93,3 @@ class TestSend:
         mocked_email_instance.attach_alternative.assert_called_once_with(
             "fake", "text/html"
         )
-
-    def test_if_is_calling__validate_email_address(
-        self, mocker, context, mocked_template_loader, settings
-    ):
-        """
-        The method TemplateBasedEmail.send is calling the function
-        validate_email_address?
-        """
-        validate_email_address_mocked = mocker.patch(
-            "async_email.email.template.validate_email_address"
-        )
-        stub = mocker.Mock()
-
-        email = ("contact@example.com",)
-
-        email_template = TemplateBasedEmail(
-            context=context,
-            html_email_template_name="registration/password_set_email.html",
-            email_template_name="registration/password_set_email.txt",
-            subject_template_name="registration/password_set_subject.txt",
-            from_email=email[0],
-            email_message_class=stub,
-        )
-        # Reset mock because this function is called on the class initialization too.
-        validate_email_address_mocked.reset_mock()
-
-        email_template.send(to=email)
-
-        validate_email_address_mocked.assert_called_once_with(
-            email=email[0],
-            validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
-        )
-
-    @pytest.mark.parametrize(
-        "check_before_send_email", [True, False],
-    )
-    def test__validate_email_address__with__validate_existence_of_mx_record__can_be_controlled_by_settings(
-        self, mocker, context, mocked_template_loader, settings, check_before_send_email
-    ):
-        """
-        The flag validate_existence_of_mx_record of the function
-        validate_email_address is controlled by the flag
-        ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL that lives on the django
-        settings.
-        """
-        print(f"check_before_send_email: {check_before_send_email}".center(80, "="))
-        settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL = check_before_send_email
-        validate_email_address_mocked = mocker.patch(
-            "async_email.email.template.validate_email_address"
-        )
-
-        email = ("contact@example.com",)
-
-        email_template = TemplateBasedEmail(
-            context=context,
-            html_email_template_name="registration/password_set_email.html",
-            email_template_name="registration/password_set_email.txt",
-            subject_template_name="registration/password_set_subject.txt",
-            from_email="noreply@example.com",
-            email_message_class=mocker.Mock(),
-        )
-        # Reset mock because this function is called on the class initialization too.
-        validate_email_address_mocked.reset_mock()
-
-        email_template.send(to=email)
-
-        validate_email_address_mocked.assert_called_once_with(
-            email=email[0], validate_existence_of_mx_record=check_before_send_email
-        )
-
-
-def test_if_is_calling__validate_email_address__during_creation_of_the_instance(
-    context, mocker
-):
-    validate_email_address_mocked = mocker.patch(
-        "async_email.email.template.validate_email_address"
-    )
-    email = "contact@example.com"
-
-    TemplateBasedEmail(
-        context=context,
-        html_email_template_name="registration/password_set_email.html",
-        email_template_name="registration/password_set_email.txt",
-        subject_template_name="registration/password_set_subject.txt",
-        from_email=email,
-    )
-
-    validate_email_address_mocked.assert_called_once_with(email)
-
-
-def test_superclass():
-    assert issubclass(
-        TemplateBasedEmail, Email
-    ), "The class TemplateBasedEmail is not a subclass of Email"

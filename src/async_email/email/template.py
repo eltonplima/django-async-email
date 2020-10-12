@@ -16,7 +16,13 @@ from async_email.email.utils import validate_email_address
 logger: Logger = logging.getLogger(__name__)
 
 
+@dataclass()
 class Email(metaclass=ABCMeta):
+    from_email: str
+
+    def __post_init__(self):
+        validate_email_address(self.from_email)
+
     @abstractmethod
     def _send(self, to: Tuple[str, ...]):
         raise NotImplementedError  # pragma: no cover
@@ -43,12 +49,8 @@ class TemplateBasedEmail(Email):
     context: Dict
     email_template_name: str
     subject_template_name: str
-    from_email: str
     html_email_template_name: str = ""
     email_message_class: EmailMessage = EmailMultiAlternatives
-
-    def __post_init__(self):
-        validate_email_address(self.from_email)
 
     @property
     def subject(self) -> str:
