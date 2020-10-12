@@ -1,5 +1,5 @@
 __all__ = [
-    "send_email",
+    "send_email_template",
 ]
 
 from typing import Dict
@@ -10,7 +10,7 @@ from django.conf import settings
 from async_email.email.template import email_template_factory
 
 
-def send_email(
+def send_email_template(
     to: Tuple[str], template_name: str, from_email: str = None, context: Dict = None,
 ):
     """
@@ -30,13 +30,6 @@ def send_email(
 
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
-    email = email_template_factory(
-        template_name=template_name, from_email=from_email, context=context
-    )
-    email.send(to=to)
-
-
-def send_email_template(template_name: str, context: Dict, from_email: str, to: Tuple):
     email = email_template_factory(
         template_name=template_name, from_email=from_email, context=context
     )

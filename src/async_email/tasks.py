@@ -11,7 +11,7 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.utils import timezone
 
-from async_email.email import send_email
+from async_email.email import send_email_template
 from async_email.task import BaseTask
 
 logger: Logger = get_task_logger(__name__)
@@ -23,7 +23,7 @@ def send_email_task(
     logger.info(f"context: {context}")
     logger.info(f"to_email: {to}")
 
-    send_email(
+    send_email_template(
         to=to, email_category=email_category, from_email=from_email, context=context,
     )
 
@@ -46,7 +46,7 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
     result = celery_app.send_task("fake_category", kwargs=kwargs,)
     """
     for category in categories:
-        logger.info(f"registering task send_email for the queue: {category}")
+        logger.info(f"registering task send_email_template for the queue: {category}")
         task_name = f"{__name__}.{category}"
         task_queue_name = task_name
         shared_task(

@@ -7,7 +7,7 @@ from async_email.tasks import send_email_task
 
 
 def test_custom_from_email(context, mocker):
-    send_email_mocked = mocker.patch("async_email.tasks.send_email")
+    send_email_mocked = mocker.patch("async_email.tasks.send_email_template")
 
     send_email_task(
         to=("noreply@example.com",),
@@ -25,7 +25,7 @@ def test_custom_from_email(context, mocker):
 
 @freeze_time("2020-09-09")
 def test_return(context, mocker):
-    mocker.patch("async_email.tasks.send_email")
+    mocker.patch("async_email.tasks.send_email_template")
 
     result = send_email_task(
         to=("noreply@example.com",),
@@ -51,7 +51,7 @@ def test_return(context, mocker):
     ],
 )
 def test_convert__to__into_tuple(context, mocker, settings, email, expected):
-    send_email_mocked = mocker.patch("async_email.tasks.send_email")
+    send_email_mocked = mocker.patch("async_email.tasks.send_email_template")
 
     send_email_task(
         to=(email,),
