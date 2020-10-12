@@ -7,7 +7,7 @@ from typing import Tuple
 
 from django.conf import settings
 
-from async_email.email.template import email_factory
+from async_email.email.template import email_template_factory
 
 
 def send_email(
@@ -30,14 +30,14 @@ def send_email(
 
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
-    email = email_factory(
+    email = email_template_factory(
         template_name=template_name, from_email=from_email, context=context
     )
     email.send(to=to)
 
 
 def send_email_template(template_name: str, context: Dict, from_email: str, to: Tuple):
-    email = email_factory(
+    email = email_template_factory(
         template_name=template_name, from_email=from_email, context=context
     )
     email.send(to=to)

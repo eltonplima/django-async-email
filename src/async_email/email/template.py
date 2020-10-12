@@ -1,4 +1,6 @@
 import logging
+from abc import ABCMeta
+from abc import abstractmethod
 from dataclasses import dataclass
 from logging import Logger
 from typing import Dict
@@ -14,8 +16,14 @@ from async_email.email.utils import validate_email_address
 logger: Logger = logging.getLogger(__name__)
 
 
+class Email(metaclass=ABCMeta):
+    @abstractmethod
+    def send(self, to: Tuple[str]):
+        raise NotImplementedError
+
+
 @dataclass
-class TemplateBasedEmail:
+class TemplateBasedEmail(Email):
     """
     Abstract the build of an email based on templates.
     """
@@ -64,7 +72,7 @@ class TemplateBasedEmail:
         email.send()
 
 
-def email_factory(
+def email_template_factory(
     template_name: str, from_email: str = None, context: Dict = None
 ) -> TemplateBasedEmail:
     """

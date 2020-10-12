@@ -2,6 +2,7 @@ from unittest.mock import call
 
 import pytest
 
+from async_email.email.template import Email
 from async_email.email.template import TemplateBasedEmail
 
 
@@ -235,3 +236,9 @@ def test_if_is_calling__validate_email_address__during_creation_of_the_instance(
     )
 
     validate_email_address_mocked.assert_called_once_with(email)
+
+
+def test_superclass():
+    assert issubclass(
+        TemplateBasedEmail, Email
+    ), "The class TemplateBasedEmail is not a subclass of Email"
