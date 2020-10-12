@@ -18,12 +18,18 @@ logger: Logger = logging.getLogger(__name__)
 
 class Email(metaclass=ABCMeta):
     @abstractmethod
-    def _send(self, to: Tuple[str]):
+    def _send(self, to: Tuple[str, ...]):
         raise NotImplementedError  # pragma: no cover
 
-    def send(self, to: Tuple[str]):
+    def send(self, to: Tuple[str, ...]):
         if not isinstance(to, tuple):
             raise ValueError(f"Expected a tuple instance but received: {type(to)}")
+
+        for email in to:
+            validate_email_address(
+                email=email,
+                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
+            )
 
         self._send(to=to)
 
@@ -60,12 +66,6 @@ class TemplateBasedEmail(Email):
             return loader.render_to_string(self.html_email_template_name, self.context)
 
     def _send(self, to: Tuple[str, ...]):
-        for email in to:
-            validate_email_address(
-                email=email,
-                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
-            )
-
         email = self.email_message_class(
             subject=self.subject, body=self.body_txt, from_email=self.from_email, to=to
         )

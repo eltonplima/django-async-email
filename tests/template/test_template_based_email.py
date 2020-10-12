@@ -1,5 +1,3 @@
-from unittest.mock import call
-
 import pytest
 
 from async_email.email.template import Email
@@ -123,43 +121,6 @@ class TestSend:
             email=email[0],
             validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
         )
-
-    def test_if_is_calling__validate_email_address__for_each_email(
-        self, mocker, context, mocked_template_loader, settings
-    ):
-        """
-        When we call send with more than one destination email we validate
-        each one of then?
-        """
-        validate_email_address_mocked = mocker.patch(
-            "async_email.email.template.validate_email_address"
-        )
-        stub = mocker.Mock()
-
-        emails = ("contact@example.com", "noreply@example.com")
-
-        email_template = TemplateBasedEmail(
-            context=context,
-            html_email_template_name="registration/password_set_email.html",
-            email_template_name="registration/password_set_email.txt",
-            subject_template_name="registration/password_set_subject.txt",
-            from_email="noreply@example.com",
-            email_message_class=stub,
-        )
-
-        email_template.send(to=emails)
-
-        calls = [
-            call(
-                email="contact@example.com",
-                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
-            ),
-            call(
-                email="noreply@example.com",
-                validate_existence_of_mx_record=settings.ASYNC_EMAIL_CHECK_MX_RECORD_BEFORE_SEND_EMAIL,
-            ),
-        ]
-        validate_email_address_mocked.assert_has_calls(calls)
 
     @pytest.mark.parametrize(
         "check_before_send_email", [True, False],
