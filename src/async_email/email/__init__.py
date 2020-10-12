@@ -37,4 +37,7 @@ def send_email(
 
 
 def send_email_template(template_name: str, context: Dict, from_email: str, to: Tuple):
-    email_factory(template_name=template_name, from_email=from_email, context=context)
+    email = email_factory(
+        template_name=template_name, from_email=from_email, context=context
+    )
+    email.send(to=to)
