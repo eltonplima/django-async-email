@@ -11,13 +11,13 @@ def test_custom_from_email(context, mocker):
 
     send_email_task(
         to=("noreply@example.com",),
-        email_category="fake_category",
+        template_name="fake_category",
         context=context,
         from_email="fake_from@example.com",
     )
     send_email_mocked.assert_called_once_with(
         context=context,
-        email_category="fake_category",
+        template_name="fake_category",
         from_email="fake_from@example.com",
         to=("noreply@example.com",),
     )
@@ -29,7 +29,7 @@ def test_return(context, mocker):
 
     result = send_email_task(
         to=("noreply@example.com",),
-        email_category="fake_category",
+        template_name="fake_category",
         context=context,
         from_email="fake_from@example.com",
     )
@@ -55,13 +55,13 @@ def test_convert__to__into_tuple(context, mocker, settings, email, expected):
 
     send_email_task(
         to=(email,),
-        email_category="fake_category",
+        template_name="fake_category",
         context=context,
         from_email="fake_from@example.com",
     )
     send_email_mocked.assert_called_once_with(
         context=context,
-        email_category="fake_category",
+        template_name="fake_category",
         from_email="fake_from@example.com",
         to=expected,
     )
@@ -76,7 +76,7 @@ def test_dynamic_task_creation(celery_worker, celery_app, settings):
 
     inspect = inspect()
     expected = [
-        f"async_email.tasks.{email_category}"
-        for email_category in settings.ASYNC_EMAIL_TEMPLATES.keys()
+        f"async_email.tasks.{template_name}"
+        for template_name in settings.ASYNC_EMAIL_TEMPLATES.keys()
     ]
     assert expected in inspect.registered_tasks().values()

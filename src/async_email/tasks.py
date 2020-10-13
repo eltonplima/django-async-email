@@ -18,13 +18,13 @@ logger: Logger = get_task_logger(__name__)
 
 
 def send_email_task(
-    context: Dict, to: Tuple[str], email_category: str, from_email: str = None
+    context: Dict, to: Tuple[str], template_name: str, from_email: str = None
 ):
     logger.info(f"context: {context}")
     logger.info(f"to_email: {to}")
 
     send_email_template(
-        to=to, email_category=email_category, from_email=from_email, context=context,
+        to=to, template_name=template_name, from_email=from_email, context=context,
     )
 
     email_sent_at = timezone.now()
@@ -45,8 +45,10 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
     }
     result = celery_app.send_task("fake_category", kwargs=kwargs,)
     """
+    print("Trying to load categories".center(80, "-"))
     for category in categories:
         logger.info(f"registering task send_email_template for the queue: {category}")
+        print(category)
         task_name = f"{__name__}.{category}"
         task_queue_name = task_name
         shared_task(
