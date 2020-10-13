@@ -3,13 +3,13 @@ from datetime import datetime
 import pytest
 from freezegun import freeze_time
 
-from async_email.tasks import send_email_task
+from async_email.tasks import send_template_email_task
 
 
 def test_custom_from_email(context, mocker):
     send_email_mocked = mocker.patch("async_email.tasks.send_email_template")
 
-    send_email_task(
+    send_template_email_task(
         to=("noreply@example.com",),
         template_name="fake_category",
         context=context,
@@ -27,7 +27,7 @@ def test_custom_from_email(context, mocker):
 def test_return(context, mocker):
     mocker.patch("async_email.tasks.send_email_template")
 
-    result = send_email_task(
+    result = send_template_email_task(
         to=("noreply@example.com",),
         template_name="fake_category",
         context=context,
@@ -53,7 +53,7 @@ def test_return(context, mocker):
 def test_convert__to__into_tuple(context, mocker, settings, email, expected):
     send_email_mocked = mocker.patch("async_email.tasks.send_email_template")
 
-    send_email_task(
+    send_template_email_task(
         to=(email,),
         template_name="fake_category",
         context=context,

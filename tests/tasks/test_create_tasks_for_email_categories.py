@@ -4,7 +4,7 @@ from unittest.mock import call
 
 from async_email.task import BaseTask
 from async_email.tasks import create_tasks_for_email_categories
-from async_email.tasks import send_email_task
+from async_email.tasks import send_template_email_task
 
 
 def test(mocker, settings):
@@ -20,7 +20,7 @@ def test(mocker, settings):
         task_queue_name = task_name
         calls.append(
             call(
-                send_email_task,
+                send_template_email_task,
                 queue=task_queue_name,
                 name=task_name,
                 autoretry_for=(SMTPException, ConnectionRefusedError, socket.timeout),

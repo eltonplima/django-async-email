@@ -17,7 +17,7 @@ from async_email.task import BaseTask
 logger: Logger = get_task_logger(__name__)
 
 
-def send_email_task(
+def send_template_email_task(
     context: Dict, to: Tuple[str], template_name: str, from_email: str = None
 ):
     logger.info(f"context: {context}")
@@ -52,7 +52,7 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
         task_name = f"{__name__}.{category}"
         task_queue_name = task_name
         shared_task(
-            send_email_task,
+            send_template_email_task,
             queue=task_queue_name,
             name=task_name,
             autoretry_for=(SMTPException, ConnectionRefusedError, socket.timeout),
