@@ -1,0 +1,25 @@
+version: "3"
+services:
+  demo_project:
+    image: demo_project
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+  demo_project_worker:
+    image: demo_project
+    ports:
+      - 8000:8000
+    environment:
+      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: library/rabbitmq:3.8-management
+    ports:
+      - 15672:15672
