@@ -7,6 +7,7 @@ from celery import Celery
 from celery.result import AsyncResult
 from django.conf import settings
 
+from async_email.tasks import BASE_TASK_NAME
 
 default_app_config = "async_email.apps.AsyncEmailConfig"
 
@@ -16,7 +17,7 @@ def send_email_template(
 ) -> AsyncResult:
     app = Celery("async_email", broker=settings.CELERY_BROKER_URL, backend="amqp")
     result = app.send_task(
-        template_name,
+        f"{BASE_TASK_NAME}.{template_name}",
         queue=template_name,
         kwargs={
             "template_name": template_name,
@@ -26,4 +27,3 @@ def send_email_template(
         },
     )
     return result
-

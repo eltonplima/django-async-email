@@ -17,6 +17,9 @@ from async_email.task import BaseTask
 logger: Logger = get_task_logger(__name__)
 
 
+BASE_TASK_NAME = __name__
+
+
 def send_template_email_task(
     context: Dict, to: Tuple[str], template_name: str, from_email: str = None
 ):
@@ -49,7 +52,7 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
     for category in categories:
         logger.info(f"registering task send_email_template for the queue: {category}")
         print(category)
-        task_name = f"{__name__}.{category}"
+        task_name = f"{BASE_TASK_NAME}.{category}"
         task_queue_name = task_name
         shared_task(
             send_template_email_task,
