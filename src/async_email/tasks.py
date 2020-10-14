@@ -20,6 +20,14 @@ logger: Logger = get_task_logger(__name__)
 BASE_TASK_NAME = __name__
 
 
+def generate_task_qualified_name(task_name: str) -> str:
+    return f"{BASE_TASK_NAME}.{task_name}"
+
+
+def generate_task_queue_qualified_name(task_name: str) -> str:
+    return f"{BASE_TASK_NAME}.{task_name}"
+
+
 def send_template_email_task(
     context: Dict, to: Tuple[str], template_name: str, from_email: str = None
 ):
