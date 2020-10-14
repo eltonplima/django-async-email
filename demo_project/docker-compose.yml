@@ -13,12 +13,12 @@ services:
       - rabbitmq
   demo_project_worker:
     image: demo_project
-    ports:
-      - 8000:8000
     environment:
       CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
     depends_on:
       - rabbitmq
+    entrypoint: ["celery"]
+    command: ["worker", "-A", "demo_project.celery", "-l", "info", "--pool", "eventlet"]
   rabbitmq:
     image: library/rabbitmq:3.8-management
     ports:
