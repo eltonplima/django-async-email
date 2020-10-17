@@ -59,9 +59,8 @@ def create_tasks_for_email_categories(categories: Union[Tuple, List]):
     print("Trying to load categories".center(80, "-"))
     for category in categories:
         logger.info(f"registering task send_email_template for the queue: {category}")
-        print(category)
-        task_name = f"{BASE_TASK_NAME}.{category}"
-        task_queue_name = task_name
+        task_name = generate_task_qualified_name(category)
+        task_queue_name = generate_task_queue_qualified_name(category)
         shared_task(
             send_template_email_task,
             queue=task_queue_name,
