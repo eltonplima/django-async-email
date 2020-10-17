@@ -1,7 +1,10 @@
+import logging
 from abc import ABC
 
 from celery import Task
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 class BaseTask(Task, ABC):
@@ -22,14 +25,17 @@ class BaseTask(Task, ABC):
         throw=True,
         eta=None,
         countdown=None,
-        max_retries=None,
         **options,
     ):
         """
         Override the default implementation to allow us to customize the max_retries in runtime.
         """
-        max_retries = settings.ASYNC_EMAIL_TASKS.get(self.name, {}).get(
-            "max_retries", max_retries
+        max_retries = (
+            settings.ASYNC_EMAIL_TASKS.get(self.name, {}).get("max_retries")
+            or settings.ASYNC_EMAIL_TASKS_MAX_RETRIES
+        )
+        logger.debug(
+            f"max_retries configure for the task {self.name} is: {max_retries}"
         )
 
         return super().retry(

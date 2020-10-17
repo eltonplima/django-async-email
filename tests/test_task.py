@@ -7,7 +7,7 @@ class TestAttributes:
         fake_task()
         assert fake_task.retry_backoff
 
-    def test_retry_kwargs(self, fake_task, mocker):
+    def test_retry_kwargs_with_default_max_retries(self, fake_task, mocker, settings):
         assert not hasattr(fake_task, "retry_kwargs")
         Task.retry = mocker.Mock()
 
@@ -19,7 +19,7 @@ class TestAttributes:
                 "eta": None,
                 "exc": None,
                 "kwargs": None,
-                "max_retries": None,
+                "max_retries": settings.ASYNC_EMAIL_TASKS_MAX_RETRIES,
                 "throw": True,
             }
         )
