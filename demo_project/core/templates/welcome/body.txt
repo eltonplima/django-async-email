@@ -1,0 +1,7 @@
+Hi {{name}},
+
+Welcome to the project {{project_name}}!
+
+Best,
+
+Django Async Email

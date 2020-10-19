@@ -9,14 +9,23 @@ services:
       - 8000:8000
     environment:
       CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
+      DEBUG: 1
     depends_on:
       - rabbitmq
+# If you want to modify and test the django-async-email without build packages just uncomment the lines bellow
+#    volumes:
+#    - ../src/async_email:/app/.venv/lib/python3.9/site-packages/async_email
   demo_project_worker:
     image: demo_project
     environment:
       CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
+      EMAIL_HOST: email_server
     depends_on:
       - rabbitmq
+      - email_server
+# If you want to modify and test the django-async-email without build packages just uncomment the lines bellow
+#    volumes:
+#    - ../src/async_email:/app/.venv/lib/python3.9/site-packages/async_email
     entrypoint: ["celery"]
     command: ["worker", "-A", "demo_project.celery", "-l", "info", "--pool", "eventlet"]
   rabbitmq:
@@ -24,3 +33,7 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+  email_server:
+    image: python
+    entrypoint: ["python"]
+    command: ["-m", "smtpd", "-n", "-d", "-c", "DebuggingServer", "0.0.0.0:25"]
