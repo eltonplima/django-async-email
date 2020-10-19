@@ -29,7 +29,7 @@ requirements = (
 
 setup(
     name="django-async-email",
-    version="0.1.0",
+    version="0.1.1",
     license="Mozilla Public License 2.0",
     description="An async Django email backend using celery",
     long_description_content_type="text/markdown",
