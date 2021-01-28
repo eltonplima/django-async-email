@@ -3,6 +3,10 @@
 [![Actions Status](https://github.com/eltonplima/django-async-email/workflows/tox/badge.svg)](https://github.com/eltonplima/django-async-email/actions)
 [![Actions Status](https://github.com/eltonplima/django-async-email/workflows/flake8/badge.svg)](https://github.com/eltonplima/django-async-email/actions)
 
+```shell
+pip install django-async-email
+```
+
 ```python
 INSTALLED_APPS = [
 ...
