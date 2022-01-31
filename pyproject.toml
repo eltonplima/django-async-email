@@ -3,3 +3,75 @@ multi_line_output = 3
 force_grid_wrap = 0
 line_length = 88
 target-version = ['py36']
+
+[tool.poetry]
+name = "async-email"
+version = "0.1.1"
+description = "An async Django email backend using celery"
+classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
+authors = ["eltonplima <me@eltonplima.dev>"]
+license = "Mozilla Public License 2.0"
+
+[tool.poetry.dependencies]
+django = ">=1.11"
+celery = ">=4.0"
+django-appconf = ">=1.0.2 "
+dnspython = ">=2.2.0"
+eventlet = ">=0.33.0"
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=6.2.5"
+pytest-pep8 = ">=1.0.6"
+pytest-cov = ">=3.0.0"
+pytest-mock = ">=3.7.0"
+pytest-django = ">=4.5.2"
+flake8 = ">=4.0.1"
+black = ">=22.1.0"
+isort = ">=5.10.1"
+tox = ">=3.24.5"
+tox-asdf = ">=0.1.0"
+freezegun = ">=1.1.0"
+pytest-celery = ""
+
+[build-system]
+requires = ["poetry_core>=1.0.0", "setuptools >= 35.0.2", "wheel >= 0.29.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+minversion = 3.4.0
+provision_tox_env = .tox
+envlist =
+    py{37,38,39,310}-dj{11,22,30}-celery{44,50,51,52},
+skip_missing_interpreters = true
+extras = dev
+isolated_build = True
+
+[testenv]
+commands = python -m pytest
+deps =
+    dj22: Django>=2.2,<2.3
+    dj30: Django>=3.0,<3.3
+    celery44: celery>=4.4,<4.5
+    celery50: celery>=5.0,<5.1
+    celery51: celery>=5.1,<5.2
+    celery52: celery>=5.2,<5.3
+    pytest >=6.2.5
+    pytest-pep8 >=1.0.6
+    pytest-cov >=3.0.0
+    pytest-mock >=3.7.0
+    pytest-django >=4.5.2
+    tox >=3.24.5
+    tox-asdf >=0.1.0
+    freezegun >=1.1.0
+    pytest-celery
+
+[testenv:flake8]
+deps = flake8
+commands = flake8 djcelery_email tests
+
+[flake8]
+max-line-length = 120
+"""
